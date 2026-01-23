@@ -63,30 +63,30 @@
             ];
 
             const determineResult = () => {
-                const isFederal = funding === 'federal' || funding === 'mixed';
+                const isFederal = funding === 'federal';
 
                 if (category === 'professional') {
                     const isFederalProf = isFederal;
                     
                     if (vendor === 'coop' || vendor === 'esc13') {
-                        const vendorName = vendor === 'esc13' ? 'Region 13' : 'Cooperative';
+                        const vendorName = vendor === 'esc13' ? 'ESC Region 13' : 'Cooperative';
                         const coopAction = vendor === 'coop' 
-                            ? '• Vendor quote must reference Coop name and contract number\n• Enter Coop & contract number in BID NBR field in Ascender\n• Upload vendor quote to Requisition in Ascender'
-                            : '• Enter contract number in BID NBR field in Ascender\n• Upload contract to Requisition in Ascender';
+                            ? '• Vendor quote must reference Coop name and contract number\n• Enter Coop & contract number in BID NBR field in Ascender\n• Upload vendor quote to Requisition'
+                            : '• Enter contract number in BID NBR field in Ascender\n• Upload contract to Requisition';
                         
                         if (amount === '350000+' && isFederal) {
                             return {
-                                authority: 'Texas Government Code 2254 and 2 CFR 200',
+                                authority: 'TGC 2254 and 2 CFR 200',
                                 method: `Use ${vendorName} contract (QBS already performed)`,
                                 action: coopAction,
-                                note: 'Federal over $350k: Perform Cost Price Analysis prior to obtaining pricing. Contact Procurement for guidance',
+                                note: 'Federal over $350k: Perform Cost Price Analysis prior to obtaining pricing. Contact Procurement for assistance',
                                 showQuoteLink: false,
                                 showFederalWarning: true,
                                 showFederalProfWarning: isFederalProf
                             };
                         }
                         return {
-                            authority: 'Texas Government Code 2254' + (isFederal ? ' and 2 CFR 200' : ''),
+                            authority: 'TGC 2254' + (isFederal ? ' and 2 CFR 200' : ''),
                             method: `Use ${vendorName} contract (QBS already performed)`,
                             action: coopAction,
                             note: null,
@@ -96,28 +96,28 @@
                     }
                     
                     return {
-                        authority: 'Texas Government Code 2254' + (isFederal ? ' and 2 CFR 200' : ''),
+                        authority: 'TGC 2254' + (isFederal ? ' and 2 CFR 200' : ''),
                         method: 'Qualification-Based Selection (QBS)',
                         action: (amount === '100000-349999' || amount === '350000+') 
-                            ? 'Qualification-Based Selection\n• Contact Procurement for guidance'
+                            ? 'Qualification-Based Selection\n• Contact Procurement for assistance'
                             : 'Qualification-Based Selection\n• Obtain quote from most qualified vendor',
                         note: isFederalProf ? 'Federal funds only allow professional services for architects and engineers' : null,
                         showQuoteLink: false,
                         showFederalProfWarning: isFederalProf,
-                        showQBSContact: false
+                        showQBSHelp: true
                     };
                 }
 
                 if (category === 'construction') {
                     if (vendor === 'esc13' || vendor === 'coop') {
-                        const methodText = vendor === 'esc13' ? 'Use Region 13 contract' : 'Use cooperative';
+                        const methodText = vendor === 'esc13' ? 'Use ESC Region 13 contract' : 'Use cooperative';
                         const actionText = vendor === 'coop'
-                            ? '• Vendor quote must reference Coop name and contract number\n• Enter Coop & contract number in BID NBR field in Ascender\n• Upload vendor quote to Requisition in Ascender'
-                            : '• Enter contract number in BID NBR field in Ascender\n• Upload contract to Requisition in Ascender';
+                            ? '• Vendor quote must reference Coop name and contract number\n• Enter Coop & contract number in BID NBR field in Ascender\n• Upload vendor quote to Requisition'
+                            : '• Enter contract number in BID NBR field in Ascender\n• Upload contract to Requisition';
                         
                         if (amount === '0-49999' || amount === '50000-99999' || amount === '100000-349999') {
                             return {
-                                authority: 'Texas Government Code 2269 and TEC 44.031' + (isFederal ? ' and 2 CFR 200' : ''),
+                                authority: 'TGC 2269 and TEC 44.031' + (isFederal ? ' and 2 CFR 200' : ''),
                                 method: methodText,
                                 action: actionText,
                                 note: null,
@@ -125,10 +125,10 @@
                             };
                         } else if (amount === '350000+') {
                             return {
-                                authority: 'Texas Government Code 2269 and TEC 44.031 and 2 CFR 200',
-                                method: vendor === 'esc13' ? 'Use Region 13 contract if all bid requirements met' : 'Use cooperative if all bid requirements met',
+                                authority: 'TGC 2269 and TEC 44.031 and 2 CFR 200',
+                                method: vendor === 'esc13' ? 'Use ESC Region 13 contract' : 'Use cooperative',
                                 action: actionText,
-                                note: 'Federal over $350k: Perform Cost Price Analysis prior to obtaining pricing. Contact Procurement for guidance',
+                                note: 'Federal over $350k: Perform Cost Price Analysis prior to obtaining pricing. Contact Procurement for assistance',
                                 showQuoteLink: false,
                                 showFederalWarning: true
                             };
@@ -137,15 +137,15 @@
 
                     if (amount === '0-49999') {
                         return {
-                            authority: isFederal ? '2 CFR 200, Texas Government Code 2269 and TEC 44.031' : 'Texas Government Code 2269 and TEC 44.031',
+                            authority: 'TGC 2269 and TEC 44.031' + (isFederal ? ' and 2 CFR 200' : ''),
                             method: 'Micro-Purchase',
                             action: 'Obtain quotes',
-                            note: 'Under threshold for formal competition',
+                            note: 'Under threshold for Formal competition',
                             showQuoteLink: false
                         };
                     } else if (amount === '50000-99999') {
                         return {
-                            authority: '2 CFR 200 and TEC 44.031',
+                            authority: 'TGC 2269 and TEC 44.031' + (isFederal ? ' and 2 CFR 200' : ''),
                             method: 'Simplified Acquisition/Small Purchase (3 quotes required)',
                             action: 'Obtain 3 quotes',
                             note: 'Federal requirement for 3 quotes applies for $50k-$100k range',
@@ -153,18 +153,18 @@
                         };
                     } else if (amount === '100000-349999') {
                         return {
-                            authority: 'Texas Government Code 2269 and TEC 44.031' + (isFederal ? ' and 2 CFR 200' : ''),
-                            method: 'Competitive Sealed Proposal (CSP), CMAR, or Design-Build',
-                            action: 'CSP, CMAR, or Design-Build',
-                            note: 'Over $100k - formal competition required per 44.031',
+                            authority: 'TGC 2269 and TEC 44.031' + (isFederal ? ' and 2 CFR 200' : ''),
+                            method: 'Competitive Sealed Proposal (CSP), Construction Manager At Risk (CMAR), or Design-Build (D-B)',
+                            action: 'CSP, CMAR, or D-B',
+                            note: 'Over $100k - Formal competition required per 44.031',
                             showQuoteLink: false
                         };
                     } else if (amount === '350000+') {
                         return {
-                            authority: '2 CFR 200 and TEC 44.031 and 2 CFR 200',
+                            authority: 'TGC 2269 and TEC 44.031 and 2 CFR 200',
                             method: 'Formal Competitive Solicitation',
                             action: 'Competitive Solicitation/Formal',
-                            note: 'Federal over $350k: Perform Cost Price Analysis prior to obtaining pricing. Contact Procurement for guidance',
+                            note: 'Federal over $350k: Perform Cost Price Analysis prior to obtaining pricing. Contact Procurement for assistance',
                             showQuoteLink: false,
                             showFederalWarning: true
                         };
@@ -175,9 +175,9 @@
                     const hasVendor = vendor !== 'no';
 
                     if (hasVendor) {
-                        const methodText = vendor === 'esc13' ? 'Use Region 13 contract' : 'Use cooperative';
+                        const methodText = vendor === 'esc13' ? 'Use ESC Region 13 contract' : 'Use cooperative';
                         const actionText = vendor === 'coop'
-                            ? '• Vendor quote must reference Coop name and contract number\n• Enter Coop & contract number in BID NBR field in Ascender\n• Upload vendor quote to Requisition in Ascender'
+                            ? '• Vendor quote must reference Coop name and contract number\n• Enter Coop & contract number in BID NBR field in Ascender\n• Upload vendor quote to Requisition'
                             : '• Enter contract number in BID NBR field in Ascender\n• Upload contract to Requisition in Ascender';
                         
                         if (amount === '0-49999' || amount === '50000-99999' || amount === '100000-349999') {
@@ -191,9 +191,9 @@
                         } else if (amount === '350000+') {
                             return {
                                 authority: '2 CFR 200 and TEC 44.031',
-                                method: vendor === 'esc13' ? 'Use Region 13 contract if all bid requirements met' : 'Use cooperative if all bid requirements met',
+                                method: vendor === 'esc13' ? 'Use ESC Region 13 contract' : 'Use cooperative',
                                 action: actionText,
-                                note: 'Federal over $350k: Perform Cost Price Analysis prior to obtaining pricing. Contact Procurement for guidance',
+                                note: 'Federal over $350k: Perform Cost Price Analysis prior to obtaining pricing. Contact Procurement for assistance',
                                 showQuoteLink: false,
                                 showFederalWarning: true
                             };
@@ -205,7 +205,7 @@
                             authority: isFederal ? '2 CFR 200 and TEC 44.031' : 'TEC 44.031',
                             method: 'Micro-Purchase',
                             action: 'Obtain pricing',
-                            note: 'Under threshold - informal process acceptable',
+                            note: 'Under threshold - Informal process acceptable',
                             showQuoteLink: false
                         };
                     } else if (amount === '50000-99999') {
@@ -221,7 +221,7 @@
                             authority: isFederal ? '2 CFR 200 and TEC 44.031' : 'TEC 44.031',
                             method: 'Formal competitive bidding',
                             action: 'Competitive Solicitation/Formal',
-                            note: 'Over $100k - formal competition required per 44.031',
+                            note: 'Over $100k - Formal competition required per 44.031',
                             showQuoteLink: false
                         };
                     } else if (amount === '350000+') {
@@ -526,7 +526,7 @@
                                             <div className="mb-6 p-4 rounded" style={{backgroundColor: '#ff6961', borderLeft: '4px solid #e55b53'}}>
                                                 <p className="text-sm font-semibold" style={{color: '#333951'}}>⚠️ Important</p>
                                                 <p className="text-sm mt-1" style={{color: '#333951'}}>
-                                                    Federal purchases over $350,000 require a Cost Price Analysis prior to obtaining pricing, regardless of awarded vendor status. Contact Procurement for guidance.
+                                                    Federal purchases over $350,000 require a Cost Price Analysis prior to obtaining pricing. Contact Procurement for assistance.
                                                 </p>
                                             </div>
                                         )}
@@ -554,11 +554,11 @@
                                             </div>
                                         )}
                                         
-                                        {result.showQBSContact && (
+                                        {result.showQBSHelp && (
                                             <div className="mb-6 p-4 rounded" style={{backgroundColor: '#e6f7f8', borderLeft: '4px solid #007d8b'}}>
-                                                <p className="text-sm font-semibold" style={{color: '#333951'}}>💡 Need Help?</p>
+                                                <p className="text-sm font-semibold" style={{color: '#333951'}}>💡 Need Help with QBS?</p>
                                                 <p className="text-sm mt-1" style={{color: '#586373'}}>
-                                                    For QBS purchases over $100,000, contact Procurement for guidance and assistance.
+                                                    Qualification-Based Selection requires evaluating vendors based on qualifications, not price. Contact Procurement for assistance.
                                                 </p>
                                             </div>
                                         )}
