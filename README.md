@@ -1,1 +1,1 @@
-# procurement-compliance-tool
+# procurement-compliance-navigator
