@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Procurement Navigator</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin="anonymous" src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z"></script>
+    <script crossorigin="anonymous" src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"></script>
+    <script crossorigin="anonymous" src="https://unpkg.com/@babel/standalone@7.29.2/babel.min.js" integrity="sha384-dqDn4UOhYWNxmtwnMX6yC3WtZZ6Li8rF6rLB7cu0i/R7btvb+p+kObgEHto7VsJK"></script>
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" integrity="sha384-HtMZLkYo+pR5/u7zCzXxMJP6QoNnQJt1qkHM0EaOPvGDIzaVZbmYr/TlvUZ/sKAg" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
@@ -32,6 +32,24 @@
          */
         
         const { useState } = React;
+
+        const LinkedText = ({ text, links }) => {
+            const pattern = new RegExp(`(${Object.keys(links).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'g');
+            const parts = text.split(pattern);
+            return parts.map((part, i) => {
+                const link = links[part];
+                if (link) {
+                    return React.createElement('a', {
+                        key: i,
+                        href: link.href,
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        style: { color: link.color || '#007d8b', textDecoration: 'underline', fontWeight: link.weight || 500 }
+                    }, part);
+                }
+                return part;
+            });
+        };
         
         const AWARDED_VENDOR_DASHBOARD_URL = "https://app.smartsheet.com/dashboards/RH8R7RHrjX8VwMGMVRwWVm2vQ6cXhvrFmCRrh6W1";
         const QUOTE_VERIFICATION_FORM_URL = "https://esc13.sharepoint.com/:b:/s/ProcurementTeam/IQC15mhNu5p2SJ2NL_NjcLd-AT4YsRUrKrkaDqFf09rKVCE?e=lMpuUx";
@@ -556,21 +574,15 @@
                                         
                                         <div className="mb-6">
                                             <h3 className="text-base font-bold mb-2" style={{color: '#586373', fontFamily: 'Montserrat, sans-serif'}}>Required Action</h3>
-                                            <div 
-                                                className="text-xl font-medium" 
-                                                style={{color: '#007d8b', whiteSpace: 'pre-line', fontFamily: 'Inter, sans-serif'}} 
-                                                dangerouslySetInnerHTML={{
-                                                    __html: result.action
-                                                        .replace(
-                                                            /BID NBR/g,
-                                                            '<a href="' + BID_NBR_FORMAT_URL + '" target="_blank" rel="noopener noreferrer" style="color:#007d8b; text-decoration:underline; font-weight:600;">BID NBR</a>'
-                                                        )
-                                                        .replace(
-                                                            /Procurement/g,
-                                                            '<a href="mailto:purchasing@esc13.txed.net" target="_blank" rel="noopener noreferrer" style="color:#007d8b; text-decoration:underline; font-weight:500;">Procurement</a>'
-                                                        )
-                                                }}
-                                            ></div>
+                                            <div
+                                                className="text-xl font-medium"
+                                                style={{color: '#007d8b', whiteSpace: 'pre-line', fontFamily: 'Inter, sans-serif'}}
+                                            >
+                                                <LinkedText text={result.action} links={{
+                                                    'BID NBR': { href: BID_NBR_FORMAT_URL, weight: 600 },
+                                                    'Procurement': { href: 'mailto:purchasing@esc13.txed.net' }
+                                                }} />
+                                            </div>
                                         </div>
                                         
                                         {result.showFederalProfWarning && (
@@ -618,13 +630,11 @@
                                                 <p
                                                     className="text-sm"
                                                     style={{ color: '#333951' }}
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: result.note.replace(
-                                                            'Procurement',
-                                                            '<a href="mailto:purchasing@esc13.txed.net" target="_blank" rel="noopener noreferrer" style="color:#007d8b; text-decoration:underline; font-weight:600;">Procurement</a>'
-                                                        )
-                                                    }}
-                                                />
+                                                >
+                                                    <LinkedText text={result.note} links={{
+                                                        'Procurement': { href: 'mailto:purchasing@esc13.txed.net', weight: 600 }
+                                                    }} />
+                                                </p>
                                             </div>
                                         )}
                                         
