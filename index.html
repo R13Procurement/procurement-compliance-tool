@@ -20,17 +20,15 @@
 </head>
 <body>
     <div id="root"></div>
-    
     <script type="text/babel">
         /*
          * Procurement Pathfinder
          * Copyright © 2026 Education Service Center Region 13
          * Developed by: Vicki Cagle, Contracts & Procurement Coordinator
-         * 
+         *
          * This tool is provided for educational and compliance purposes.
          * Unauthorized reproduction or distribution is prohibited.
          */
-        
         const { useState } = React;
 
         const LinkedText = ({ text, links }) => {
@@ -50,12 +48,12 @@
                 return part;
             });
         };
-        
+
         const AWARDED_VENDOR_DASHBOARD_URL = "https://app.smartsheet.com/dashboards/RH8R7RHrjX8VwMGMVRwWVm2vQ6cXhvrFmCRrh6W1";
         const QUOTE_VERIFICATION_FORM_URL = "https://esc13.sharepoint.com/:b:/s/ProcurementTeam/IQC15mhNu5p2SJ2NL_NjcLd-AT4YsRUrKrkaDqFf09rKVCE?e=lMpuUx";
         const TGC_2254_URL = "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.2254.htm";
         const BID_NBR_FORMAT_URL = "https://app.smartsheet.com/b/publish?EQBCT=cbbc1eb4b0ac40e68b5af76ee6a38847";
-        
+
         const ProcurementTool = () => {
             const [step, setStep] = useState(1);
             const [amount, setAmount] = useState('');
@@ -65,8 +63,7 @@
             const [showWarning, setShowWarning] = useState(false);
 
             const amountRanges = [
-                { value: '0-49999', label: '$0 - $49,999.99' },
-                { value: '50000-99999', label: '$50,000 - $99,999.99' },
+                { value: '0-99999', label: '$0 - $99,999.99' },
                 { value: '100000-349999', label: '$100,000 - $349,999.99' },
                 { value: '350000+', label: '$350,000 - $9,999,999' }
             ];
@@ -94,13 +91,13 @@
 
                 if (category === 'professional') {
                     const isFederalProf = isFederal;
-                    
+
                     if (vendor === 'coop' || vendor === 'esc13') {
                         const vendorName = vendor === 'esc13' ? 'ESC Region 13' : 'Cooperative';
-                        const coopAction = vendor === 'coop' 
+                        const coopAction = vendor === 'coop'
                             ? '• Vendor quote must reference Coop name and contract number\n• Enter Coop & contract number in BID NBR field in Ascender\n• Upload vendor quote to Requisition'
                             : '• Enter contract number in BID NBR field in Ascender\n• Upload contract to Requisition';
-                        
+
                         if (amount === '350000+' && isFederal) {
                             return {
                                 authority: 'TGC 2254 and 2 CFR 200',
@@ -121,11 +118,11 @@
                             showFederalProfWarning: isFederalProf
                         };
                     }
-                    
+
                     return {
                         authority: 'TGC 2254' + (isFederal ? ' and 2 CFR 200' : ''),
                         method: 'Qualification-Based Selection (QBS)',
-                        action: (amount === '100000-349999' || amount === '350000+') 
+                        action: (amount === '100000-349999' || amount === '350000+')
                             ? 'Use a qualification-based selection process\n• Contact Procurement for assistance'
                             : 'Qualification-Based Selection\n• Obtain quote from most qualified vendor',
                         note: null,
@@ -141,8 +138,8 @@
                         const actionText = vendor === 'coop'
                             ? '• Vendor quote must reference Coop name and contract number\n• Enter Coop & contract number in BID NBR field in Ascender\n• Upload vendor quote to Requisition'
                             : '• Enter contract number in BID NBR field in Ascender\n• Upload contract to Requisition';
-                        
-                        if (amount === '0-49999' || amount === '50000-99999' || amount === '100000-349999') {
+
+                        if (amount === '0-99999' || amount === '100000-349999') {
                             return {
                                 authority: 'TGC 2269 and TEC 44.031' + (isFederal ? ' and 2 CFR 200' : ''),
                                 method: methodText,
@@ -162,21 +159,13 @@
                         }
                     }
 
-                    if (amount === '0-49999') {
+                    if (amount === '0-99999') {
                         return {
                             authority: '2 CFR 200',
                             method: 'Micro-Purchase',
                             action: 'Obtain quotes',
                             note: 'Under threshold for Formal competition',
                             showQuoteLink: false
-                        };
-                    } else if (amount === '50000-99999') {
-                        return {
-                            authority: 'TGC 2269 and TEC 44.031' + (isFederal ? ' and 2 CFR 200' : ''),
-                            method: 'Simplified Acquisition/Small Purchase',
-                            action: 'Obtain 3 quotes',
-                            note: 'Requirement for 3 quotes applies for $50k-$100k range',
-                            showQuoteLink: true
                         };
                     } else if (amount === '100000-349999') {
                         return {
@@ -206,8 +195,8 @@
                         const actionText = vendor === 'coop'
                             ? '• Vendor quote must reference Coop name and contract number\n• Enter Coop & contract number in BID NBR field in Ascender\n• Upload vendor quote to Requisition'
                             : '• Enter ESC Region 13 RFP/RFQ number in BID NBR field in Ascender\n• Upload quote and/or contract to Requisition';
-                        
-                        if (amount === '0-49999' || amount === '50000-99999' || amount === '100000-349999') {
+
+                        if (amount === '0-99999' || amount === '100000-349999') {
                             return {
                                 authority: isFederal ? '2 CFR 200 and TEC 44.031' : 'TEC 44.031',
                                 method: methodText,
@@ -227,21 +216,13 @@
                         }
                     }
 
-                    if (amount === '0-49999') {
+                    if (amount === '0-99999') {
                         return {
                             authority: '2 CFR 200',
                             method: 'Micro-Purchase',
                             action: 'Obtain quote',
                             note: 'Under threshold - Informal process acceptable',
                             showQuoteLink: false
-                        };
-                    } else if (amount === '50000-99999') {
-                        return {
-                            authority: '2 CFR 200',
-                            method: 'Simplified Acquisition/Small Purchase',
-                            action: 'Obtain 3 quotes',
-                            note: 'Requirement for 3 quotes applies for $50k-$100k range',
-                            showQuoteLink: true
                         };
                     } else if (amount === '100000-349999') {
                         return {
@@ -290,39 +271,37 @@
 
             return (
                 <div className="min-h-screen p-6" style={{backgroundColor: '#f0f4f8'}}>
-    <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-            {/* Main Header Container: Stacked and Centered */}
-            <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center', 
-                textAlign: 'center',
-                gap: '16px', 
-                marginBottom: '24px' 
-            }}>
-                {/* Logo */}
-                <img 
-                    src="https://github.com/R13Procurement/procurement-compliance-tool/blob/main/NavyBlueStar_Region13Logo%20(2).png?raw=true" 
-                    alt="ESC Region 13 Logo" 
-                    style={{height: '48px', width: 'auto'}}
-                />
+                    <div className="max-w-3xl mx-auto">
+                        <div className="bg-white rounded-lg shadow-lg p-8">
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                textAlign: 'center',
+                                gap: '16px',
+                                marginBottom: '24px'
+                            }}>
+                                <img
+                                    src="https://github.com/R13Procurement/procurement-compliance-tool/blob/main/NavyBlueStar_Region13Logo%20(2).png?raw=true"
+                                    alt="ESC Region 13 Logo"
+                                    style={{height: '48px', width: 'auto'}}
+                                />
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                                    <h1 className="text-3xl font-bold" style={{color: '#333951', margin: 0}}>
+                                        Procurement Pathfinder
+                                    </h1>
+                                    <span style={{fontSize: '2rem'}}>🧭</span>
+                                </div>
+                            </div>
 
-                {/* Title and Icon Wrapper */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-                    <h1 className="text-3xl font-bold" style={{color: '#333951', margin: 0}}>
-                        Procurement Pathfinder
-                    </h1>
-                    <span style={{fontSize: '2rem'}}>🧭</span>
-                </div>
-            </div>
                             {step < 5 && (
                                 <p className="mb-8" style={{color: '#586373'}}>Answer a few questions to find the correct procurement path.</p>
                             )}
-{step === 5 && (
+                            {step === 5 && (
                                 <div className="mb-8"></div>
                             )}
- <div className="flex items-center justify-between mb-8">
+
+                            <div className="flex items-center justify-between mb-8">
                                 {[1, 2, 3, 4, 5].map((s) => (
                                     <div key={s} className="flex items-center">
                                         <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-white`} style={{backgroundColor: step >= s ? '#007d8b' : '#586373'}}>
@@ -411,7 +390,7 @@
                                             <span className="font-medium" style={{color: '#333951'}}>Goods/Services</span>
                                             <span style={{color: '#586373'}}>→</span>
                                         </button>
-                                        
+
                                         <button
                                             key="professional"
                                             onClick={() => handleNext('professional', 4)}
@@ -429,11 +408,11 @@
                                             <span className="font-medium" style={{color: '#333951'}}>Professional Services (TGC 2254)</span>
                                             <span style={{color: '#586373'}}>→</span>
                                         </button>
-                                        
+
                                         <p className="text-sm py-2" style={{color: '#586373'}}>
                                             Not sure what qualifies as Professional Services?{' '}
-                                            
-                                                <a href={TGC_2254_URL}
+                                            <a
+                                                href={TGC_2254_URL}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="underline"
@@ -442,7 +421,7 @@
                                                 See TGC 2254 definition
                                             </a>
                                         </p>
-                                        
+
                                         <button
                                             key="construction"
                                             onClick={() => handleNext('construction', 4)}
@@ -470,7 +449,6 @@
                             {step === 4 && (
                                 <div>
                                     <h2 className="text-xl font-semibold mb-4" style={{color: '#333951'}}>Step 4: Do you have an awarded vendor?</h2>
-                                    
                                     <div className="space-y-3">
                                         <button
                                             onClick={() => handleNext('no', 5)}
@@ -488,12 +466,12 @@
                                             <span className="font-medium" style={{color: '#333951'}}>No</span>
                                             <span style={{color: '#586373'}}>→</span>
                                         </button>
-                                        
+
                                         <div className="p-3 rounded" style={{backgroundColor: '#fff8e1', borderLeft: '4px solid #f8da54'}}>
                                             <p className="text-sm font-medium" style={{color: '#333951'}}>
                                                 🔍 Not sure? Check the{' '}
-                                                
-                                                   <a href={AWARDED_VENDOR_DASHBOARD_URL}
+                                                <a
+                                                    href={AWARDED_VENDOR_DASHBOARD_URL}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="underline"
@@ -503,7 +481,7 @@
                                                 </a>
                                             </p>
                                         </div>
-                                        
+
                                         <button
                                             onClick={() => handleNext('esc13', 5)}
                                             className="w-full p-4 text-left bg-white border rounded-lg transition-all flex items-center justify-between group"
@@ -520,7 +498,7 @@
                                             <span className="font-medium" style={{color: '#333951'}}>Yes - ESC Region 13</span>
                                             <span style={{color: '#586373'}}>→</span>
                                         </button>
-                                        
+
                                         <button
                                             onClick={() => handleNext('coop', 5)}
                                             className="w-full p-4 text-left bg-white border rounded-lg transition-all flex items-center justify-between group"
@@ -555,23 +533,19 @@
                                             <div className="mb-6 p-4 rounded" style={{backgroundColor: '#ff6961', borderLeft: '4px solid #e55b53'}}>
                                                 <p className="text-sm font-semibold" style={{color: '#333951'}}>⚠️ Important</p>
                                                 <p className="text-sm mt-1" style={{color: '#333951'}}>
-                                                    Federal purchases over $350,000 require a Cost Price Analysis prior to obtaining pricing. 
- {' '}
-  Contact{' '}
-  <a
-    href="mailto:purchasing@esc13.txed.net"
-    target="_blank"
-    rel="noopener noreferrer"
-    style={{ color: '#333951', textDecoration: 'underline', fontWeight: 500 }}
-  >
-    Procurement
-  </a>{' '}
-  for assistance.
-
+                                                    Federal purchases over $350,000 require a Cost Price Analysis prior to obtaining pricing.{' '}Contact{' '}
+                                                    <a
+                                                        href="mailto:purchasing@esc13.txed.net"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        style={{ color: '#333951', textDecoration: 'underline', fontWeight: 500 }}
+                                                    >
+                                                        Procurement
+                                                    </a>{' '}for assistance.
                                                 </p>
                                             </div>
                                         )}
-                                        
+
                                         <div className="mb-6">
                                             <h3 className="text-base font-bold mb-2" style={{color: '#586373', fontFamily: 'Montserrat, sans-serif'}}>Required Action</h3>
                                             <div
@@ -584,7 +558,7 @@
                                                 }} />
                                             </div>
                                         </div>
-                                        
+
                                         {result.showFederalProfWarning && (
                                             <div className="mb-6 p-4 rounded" style={{backgroundColor: '#fff8e1', borderLeft: '4px solid #f8da54'}}>
                                                 <p className="text-sm font-semibold" style={{color: '#007d8b'}}>⚠️ Important Note</p>
@@ -593,24 +567,21 @@
                                                 </p>
                                             </div>
                                         )}
-                                        
+
                                         {result.showQBSHelp && (
                                             <div className="mb-6 p-4 rounded" style={{backgroundColor: '#eceef7', borderLeft: '4px solid #ff6e46'}}>
                                                 <p className="text-sm font-semibold" style={{color: '#333951'}}>💡 Need Help with QBS?</p>
                                                 <p className="text-sm mt-1" style={{color: '#586373'}}>
-                                                    Qualification-Based Selection requires evaluating vendors based on qualifications, not price. 
-{' '}
-  Contact{' '}
-  <a
-    href="mailto:purchasing@esc13.txed.net"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-sm underline"
-    style={{ color: '#333951', textDecoration: 'underline', fontWeight: 400 }}
-  >
-    Procurement
-  </a>{' '}
-  for assistance.
+                                                    Qualification-Based Selection requires evaluating vendors based on qualifications, not price.{' '}Contact{' '}
+                                                    <a
+                                                        href="mailto:purchasing@esc13.txed.net"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-sm underline"
+                                                        style={{ color: '#333951', textDecoration: 'underline', fontWeight: 400 }}
+                                                    >
+                                                        Procurement
+                                                    </a>{' '}for assistance.
                                                 </p>
                                             </div>
                                         )}
@@ -627,23 +598,20 @@
 
                                         {result.note && (
                                             <div className="mt-4 p-4 bg-white rounded border" style={{ borderColor: '#007d8b' }}>
-                                                <p
-                                                    className="text-sm"
-                                                    style={{ color: '#333951' }}
-                                                >
+                                                <p className="text-sm" style={{ color: '#333951' }}>
                                                     <LinkedText text={result.note} links={{
                                                         'Procurement': { href: 'mailto:purchasing@esc13.txed.net', weight: 600 }
                                                     }} />
                                                 </p>
                                             </div>
                                         )}
-                                        
+
                                         {result.showQuoteLink && (
                                             <div className="mt-4 p-4 bg-white rounded border" style={{borderColor: '#007d8b'}}>
                                                 <p className="text-sm font-medium" style={{color: '#333951'}}>
                                                     🧾{' '}
-                                                    
-                                                        <a href={QUOTE_VERIFICATION_FORM_URL}
+                                                    <a
+                                                        href={QUOTE_VERIFICATION_FORM_URL}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="underline"
@@ -701,8 +669,8 @@
 
                         <p className="text-center text-sm mt-6" style={{ color: '#586373' }}>
                             Questions? Contact{" "}
-                            
-                               <a href="mailto:purchasing@esc13.txed.net"
+                            <a
+                                href="mailto:purchasing@esc13.txed.net"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ color: '#007d8b', textDecoration: 'underline' }}
@@ -719,6 +687,4 @@
         ReactDOM.render(<ProcurementTool />, document.getElementById('root'));
     </script>
 </body>
-
 </html>
-
